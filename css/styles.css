@@ -1,0 +1,93 @@
+html, body, #map {
+  height: 100%;
+  margin: 0;
+}
+
+/* #map {
+  position: absolute; top: 0; bottom: 0; width: 100%
+} */
+
+#sidenav-buttons {
+  position: fixed;
+  left: 250px;
+  z-index: 1;
+  transition: left .5s;
+}
+
+/* The navigation menu links */
+#sidenav-buttons button {
+  display: block;
+}
+
+/* Hover control for buttons - hide/show different text span classes */
+#sidenav-buttons button .onhover {
+  display: none;
+}
+#sidenav-buttons button:hover .original {
+  display: none;
+}
+#sidenav-buttons button:hover .onhover {
+  display: inline;
+  cursor: pointer;
+}
+
+.sidenav-button { /* style menu buttons */
+  border-radius: 0px 30px 30px 0px;
+  background-color: gray;
+  font-style: italic;
+  color: white;
+  font-size: 14px;
+  padding-right: 8px;
+  border-width: 0.5px;
+  margin-top: 4px;
+  border-left-width: 0px;
+}
+
+.sidenav-button:focus {
+  outline:0; /* removes default button highlighting */
+}
+
+.sidenav-button-active {
+  background-color: #111; /* same as background color for sidenav menu */
+}
+
+/* The side navigation menu - originally hidden*/
+#sidenav-menu {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with jquery */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 0px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+#sidenav-menu p {
+  width: 230px; /* Keeps the width of the text fixed to get rid of 'text squishing' effect on transition */
+  margin: 0;
+  padding-left: 13px;
+  text-decoration: none;
+  font-size: 13px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  text-align: justify;
+}
+
+/* Position and style the close button (top left corner) */
+.closebtn {
+  top: 0;
+  text-decoration: none;
+  font-size: 30px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  padding-left: 15px;
+}
+
+.closebtn:hover {
+  color: #f1f1f1;
+  text-decoration: none;
+}
