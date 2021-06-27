@@ -5,6 +5,8 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://libs.cartocdn.com/mapbox-gl/v1.13.0/mapbox-gl.js"></script>
     <link href="https://libs.cartocdn.com/mapbox-gl/v1.13.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-darkness/jquery-ui.css" rel = "stylesheet">
     <link rel="stylesheet" href="css/styles.css">
   </head>
 
@@ -14,31 +16,31 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <!-- Default text when user first loads page - brief context and instructions -->
       <p class='sidenav-menu-text'> <span style='text-align: center; font-size: 20px; color: #f1f1f1;'>Quick Start</span><br><br>
-        Default text when page first loads - brief context and instructions
+        Default text when page first loads - brief context and instructions. Legend for scores that are visible on screen and description of how they were calculated.
       </p>
     </div>
 
     <!-- Text for each menu button -->
-    <p id='context-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Context</span><br>
+    <div id='context-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Context</span><br>
       Background info on the need for this map; context on current state broadband coverage mapping efforts and limitations.
-    </p>
+    </div>
 
-    <p id='about-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>About</span><br>
+    <div id='about-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>About</span><br>
       Data sources used to create this map.
-    </p>
+    </div>
 
-    <p id='usemap-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Instructions</span><br>
+    <div id='usemap-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Instructions</span><br>
       How to use map - broad instructions - slide, hover, click to show all info for that tract maybe?
-    </p>
+    </div>
 
-    <p id='filter-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Map Controls</span><br>
+    <div id='filter-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Map Controls</span><br>
       Buttons to select which variables to view (can view 1 (choropleth color map) or 2 (color and height of tract shows values of each variable for that tract))<br>
-      Filters to adjust map view for various variables (slide selection)
-    </p>
+      Filters to adjust map view for various variables (slide selection)<br>
+    </div>
 
-    <p id='legend-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Legend</span><br>
+    <div id='legend-menu-button-text' style="display:none;"> <span style='float: right; margin-top: -33px; font-size: 20px; color: #f1f1f1;'>Legend</span><br>
       Legend - possibly dynamic, depending on layer the user is viewing
-    </p>
+    </div>
 
 
       <div id='map'>
@@ -66,6 +68,30 @@
           </button>
         </div>
 
+        <!-- Map controls for filtering map data -->
+        <div id='map-controls'>
+          <div class='map-controls-content'>
+            <h4>Show on map: <label id='active-month'></label></h4>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select variable
+              </button>
+              <div class="dropdown-menu" id="first-dropdown" aria-labelledby="dropdownMenuButton">
+                <!-- menu will be populated with JQuery -->
+              </div>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select variable
+              </button>
+              <div class="dropdown-menu" id="second-dropdown" aria-labelledby="dropdownMenuButton">
+                <!-- menu will be populated with JQuery  -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
 
     <script
@@ -73,6 +99,8 @@
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
   </body>
 

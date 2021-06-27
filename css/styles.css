@@ -60,7 +60,7 @@ html, body, #map {
   left: 0;
   background-color: #111; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 0px; /* Place content 60px from the top */
+  padding-top: 0px; /* Place content 0px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
@@ -90,4 +90,35 @@ html, body, #map {
 .closebtn:hover {
   color: #f1f1f1;
   text-decoration: none;
+}
+
+#map-controls {
+  top: 10%;
+  right: 20px;
+  width: 300px;
+  position: fixed;
+  z-index: 1; /* places controls on top of map container */
+  transition: right .5s;
+}
+
+#map-controls::before {
+  content: "";
+  background-color: gray;
+  opacity: 0.8;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  border-radius: 10px;
+}
+
+.map-controls-content {
+  position: relative; /* places content inside the map controls on top of partly transparent background */
+  padding: 15px;
+  color: white;
+}
+
+.dropdown-menu, .btn {
+  font-size: 12px;
 }

@@ -12,6 +12,36 @@ map.addControl(new mapboxgl.NavigationControl({
   showZoom: true
 }));
 
+// Function to populate dropdown variable menus:
+// 'column name in data': 'display value for frontend of visualization'
+var colName_to_displayVal = {
+  'Wired 25 (BN)': 'wired25_3_2020_bn',
+  'Wired 100 (BN)': 'wired100_3_2020_bn',
+  //'averagembps_bn': 'Average Speed (BN)',
+  //'fastestaveragembps_bn': 'Fastest Average Speed (BN)',
+  //'lowestpricedterrestrialbroadbandplan_bn': 'Lowest Priced Terrestrial Plan (BN)',
+  'Broadband Usage (MS)': 'broadbandusage_ms',
+  'Average Throughput (ML)': 'avg_meanthroughputmbps_ml',
+  'Number of Speed Tests (ML)': 'speedtests_ml',
+  'Average Weighted Download Speed (Ook)': 'avgwt_downloadspeed_ook',
+  'Average Weighted Upload Speed (Ook)': 'avgwt_uploadspeed_ook',
+  'Number of Speed Tests (Ook)': 'Number of Speed Tests (Ook)speedtests_ook',
+  'Number of Internet Providers (FCC)': 'numproviders_fcc',
+  'Average Fraction Coverage (FCC)': 'avg_fractioncoverage_fcc',
+  'Average Weighted Maximum Advertised Download Speed (FCC)': 'avgwt_maxaddown_fcc',
+  'Average Weighted Maximum Upload Download Speed (FCC)': 'avgwt_maxadup_fcc',
+  'Broadband Score': 'dummy_score_for_testing'
+}
+
+// Populate the variable selection dropdowns on the frontend:
+$.each(colName_to_displayVal, function(key, value) {
+  $('.dropdown-menu').append(`
+    <li><a class="dropdown-item" data-value=${value} href="#">${key}</a></li>
+    `)
+})
+
+
+// Function to determine when the sidenav is open and what it is populated with
 function openNav() {
   // Set the width of the side navigation to be viewable at 250px and move the sidenav buttons over 250px:
   document.getElementById("sidenav-menu").style.width = "250px";
@@ -35,8 +65,78 @@ function closeNav() {
   $('.sidenav-button').removeClass('sidenav-button-active');
 }
 
-var avg_d_colors = ['#8A8AFF','#5C5CFF','#2E2EFF','#0000FF','#0000A3']; //blue
+// variables to hold the user's selection of variables to display:
+var first_var = 'Broadband Score';
+var second_var = 'Broadband Score';
 
+// this function will update the variable selections on the first dropdown menu for variable selection:
+$("#first-dropdown li a").click(function() {
+  first_var = $(this).text() //$(this).data('value') - this is a string AND it is updating the global first_var variable BUT still throwing error when we show the layer... `'${$(this).data('value')}'`
+  console.log('local first_var:', first_var)
+  console.log(jQuery.type(first_var))
+  $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  // $(this).parents(".dropdown").find('.btn').val($(this).data('value')); // "allows you to have different display text and data value for each element - from SO"
+
+  // show fill layer for first variable
+  map.setLayoutProperty('scores_layer', 'visibility','none');
+  map.setLayoutProperty('first_selected_layer', 'visibility','visible');
+  map.setPaintProperty('first_selected_layer', 'fill-color', [
+    'step',
+    ['get', colName_to_displayVal[first_var]],
+    sequential_colors[0],
+    25, sequential_colors[1],
+    100, sequential_colors[2],
+    200, sequential_colors[3],
+    230, sequential_colors[4],
+  ])
+  map.setPaintProperty('second_selected_layer', 'fill-extrusion-color', [
+    'step',
+    ['get', colName_to_displayVal[first_var]],
+    sequential_colors[0],
+    25, sequential_colors[1],
+    100, sequential_colors[2],
+    200, sequential_colors[3],
+    230, sequential_colors[4],
+  ]);
+});
+
+// this function will update the variable selections on the second dropdown menu for variable selection:
+$("#second-dropdown li a").click(function() {
+  second_var = $(this).text() //$(this).data('value') - this is a string AND it is updating the global first_var variable BUT still throwing error when we show the layer... `'${$(this).data('value')}'`
+  console.log('global first_var:', first_var)
+  console.log(jQuery.type(first_var))
+  //console.log(`${first_var}`)
+  $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  // $(this).parents(".dropdown").find('.btn').val($(this).data('value')); // "allows you to have different display text and data value for each element - from SO"
+
+  map.setLayoutProperty('scores_layer', 'visibility','none');
+  map.setLayoutProperty('second_selected_layer', 'visibility','visible');
+  map.setPaintProperty('second_selected_layer', 'fill-extrusion-color', [
+    'step',
+    ['get', colName_to_displayVal[first_var]],
+    sequential_colors[0],
+    25, sequential_colors[1],
+    100, sequential_colors[2],
+    200, sequential_colors[3],
+    230, sequential_colors[4],
+  ]);
+  map.setPaintProperty('second_selected_layer', 'fill-extrusion-height', [
+    'step',
+    ['get', colName_to_displayVal[second_var]],
+    5000,
+    25, 10000,
+    60, 20000,
+    120, 30000,
+    180, 40000
+  ]);
+  //map.setPaintProperty('first_selected_layer', 'fill-outline-color', '#0000ffff')
+});
+
+// variables to hold and edit our color schemes
+var sequential_colors = ['#8A8AFF','#5C5CFF','#2E2EFF','#0000FF','#0000A3']; //blue
+var diverging_colors = ['#d7191c','#fdae61','#ffffbf','#a6d96a','#1a9641'] //red --> green
+
+// Function to add styling for hovered census tract
 map.on('style.load', function() {
 
   openNav(); //load welcome message on load
@@ -58,16 +158,16 @@ map.on('style.load', function() {
     paint: {
       'fill-extrusion-color': [
         'step',
-        ['get', 'avg_d_mbps_wt'],
-        avg_d_colors[0],
-        25, avg_d_colors[1],
-        100, avg_d_colors[2],
-        200, avg_d_colors[3],
-        230, avg_d_colors[4],
+        ['get', 'avgwt_downloadspeed_ook'],
+        sequential_colors[0],
+        25, sequential_colors[1],
+        100, sequential_colors[2],
+        200, sequential_colors[3],
+        230, sequential_colors[4],
       ],
       'fill-extrusion-height': [
         'step',
-        ['get', 'avg_u_mbps_wt'],
+        ['get', 'avgwt_uploadspeed_ook'],
         5000,
         25, 10000,
         60, 20000,
@@ -84,42 +184,104 @@ const REQUEST_GET_MAX_URL_LENGTH = 2048;
 
 addCartoLayer();
 
+// Function to add layers based on CARTO tiles:
 async function addCartoLayer() {
   const tileSourceURLs = await getTileSources();
+
   map.addLayer(
     {
-      id: 'ookla_censustract_geom_v3',
+      id: 'scores_layer',
+      type: 'fill',
+      source: {
+        type: 'vector',
+        tiles: tileSourceURLs
+      },
+      'source-layer': 'layer0',
+      layout: {
+        'visibility': 'visible'
+      },
+      paint: {
+        'fill-color': [
+          'step',
+          ['get', 'dummy_score_for_testing'],
+          diverging_colors[0],
+          2, diverging_colors[1],
+          3, diverging_colors[2],
+          4, diverging_colors[3],
+          5, diverging_colors[4],
+        ],
+        'fill-opacity': 0.7,
+        'fill-outline-color': 'black'
+      }
+    }
+  );
+
+  map.addLayer(
+    {
+      id: 'first_selected_layer',
+      type: 'fill',
+      source: {
+        type: 'vector',
+        tiles: tileSourceURLs
+      },
+      'source-layer': 'layer0',
+      layout: {
+        'visibility': 'none'
+      },
+      paint: {
+        'fill-color': [
+          'step',
+          ['get', colName_to_displayVal[first_var]],
+          sequential_colors[0],
+          25, sequential_colors[1],
+          100, sequential_colors[2],
+          200, sequential_colors[3],
+          230, sequential_colors[4],
+        ],
+        'fill-opacity': 1
+      }
+    }
+  );
+
+  map.addLayer(
+    {
+      id: 'second_selected_layer',
       type: 'fill-extrusion',
       source: {
         type: 'vector',
         tiles: tileSourceURLs
       },
       'source-layer': 'layer0',
+      layout: {
+        'visibility': 'none'
+      },
       paint: {
         'fill-extrusion-color': [
           'step',
-          ['get', 'avg_d_mbps_wt'],
-          avg_d_colors[0],
-          25, avg_d_colors[1],
-          100, avg_d_colors[2],
-          200, avg_d_colors[3],
-          230, avg_d_colors[4],
+          ['get', first_var],
+          sequential_colors[0],
+          25, sequential_colors[1],
+          100, sequential_colors[2],
+          200, sequential_colors[3],
+          230, sequential_colors[4],
         ],
         'fill-extrusion-height': [
           'step',
-          ['get', 'avg_u_mbps_wt'],
+          ['get', 'avgwt_uploadspeed_ook'],
           5000,
           25, 10000,
           60, 20000,
           120, 30000,
           180, 40000
         ],
-        'fill-extrusion-opacity': 0.7
+        'fill-extrusion-opacity': 1
       }
     }
   );
+
 }
 
+// Function to get tiles from CARTO source
 async function getTileSources() {
   const mapConfig = JSON.stringify({
     version: '1.3.1',
@@ -128,7 +290,7 @@ async function getTileSources() {
       {
         type: 'mapnik',
         options: {
-          sql: 'SELECT the_geom_webmercator, geoid10, avg_d_mbps_wt, avg_u_mbps_wt, tests FROM ookla_censustract_geom_v3',
+          sql: 'SELECT the_geom_webmercator, censustract, wired25_3_2020_bn, wired100_3_2020_bn, broadbandusage_ms, avg_meanthroughputmbps_ml, speedtests_ml, avgwt_downloadspeed_ook, avgwt_uploadspeed_ook, speedtests_ook, numproviders_fcc, avg_fractioncoverage_fcc, avgwt_maxaddown_fcc, avgwt_maxadup_fcc, dummy_score_for_testing FROM masterdataset_speedtestdata_dummyscores',
           vector_extent: 4096,
           bufferSize: 1,
           version: '1.3.1'
@@ -175,7 +337,7 @@ var popup = new mapboxgl.Popup({
 map.on('mousemove', function(e) {
   //query for the features under the mouse:
   var features = map.queryRenderedFeatures(e.point, {
-      layers: ['ookla_censustract_geom_v3'],
+      layers: ['second_selected_layer'],
   });
 
   // Check whether features exist
@@ -184,10 +346,10 @@ map.on('mousemove', function(e) {
 
     var hoveredFeature = features[0];
     //Extract necessary variables:
-    var tract_id = hoveredFeature.properties.geoid10;
+    var tract_id = hoveredFeature.properties.censustract;
     var tests = hoveredFeature.properties.tests;
-    var upload_sp = hoveredFeature.properties.avg_u_mbps_wt;
-    var download_sp = hoveredFeature.properties.avg_d_mbps_wt
+    var upload_sp = hoveredFeature.properties.avgwt_uploadspeed_ook;
+    var download_sp = hoveredFeature.properties.avgwt_downloadspeed_ook
 
     window['popupContent'] = `
       <div style = "font-family:sans-serif; font-size:14px; font-weight:bold">Census Tract ${tract_id}</div>
@@ -203,8 +365,8 @@ map.on('mousemove', function(e) {
       'type': 'Feature',
       'geometry': hoveredFeature.geometry,
       'properties': {
-        'avg_u_mbps_wt': upload_sp,
-        'avg_d_mbps_wt': download_sp
+        'avgwt_uploadspeed_ook': upload_sp,
+        'avgwt_downloadspeed_ook': download_sp
       },
     };
     // set this circle's geometry and properties as the data for the highlight source
